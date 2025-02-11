@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <style>
+    body{
+      padding: 20px;
+    }
+    .main-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background-color: rgb(235, 228, 221);
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .sub-container{
+      display: flex;
+      justify-content: start;
+      align-items: start ;
+      width: 80%;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .company-info{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 30px;
+    }
+   .message{
+    font-size: 30px;
+    text-align: center;
+    font-weight: bolder;
+   }
+   .customer-details{
+    display: flex;
+    justify-content:start;
+    align-items: start;
+    gap: 15px;
+    flex-direction: column;
+    text-transform: capitalize;
+    font-weight: 700;
+    color: black;
+    width: 100%;
+   }
+   .details{
+    padding: 25px;
+    border-bottom: 2px solid black;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: start;
+   }
+   .date{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+   }
+   .date-time{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+   }
+   .customer-products{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #FFE500;
+    padding: 0 20px;
+   }
+   .header{
+    padding: 5px 15px;
+    justify-content: space-between;
+    align-items: start;
+    display: flex;
+    font-weight: 900;
+    gap: 10px;
+    width: 100%;
+    border-bottom: 2px solid black;
+   }
+   img{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+   }
+   .name,.quantity,.price,.total{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+   }
+   .grand-total{
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    gap: 10px;
+   }
+  </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="sub-container">
+          <div class="company-info">
+            <img src="https://media.bbf-bike.de/logos/hsr-logo.png" alt="logo"/>
+            <div class="message">Vielen Dank für Ihren Kauf</div>
+          </div>
+          <div class="customer-details">
+            <div class="details">
+              <div class="customer">
+                <p>To,</p>
+                <div class="name"><%= data.name %></div>
+                <div class="address"><%= data.shippingAddress %></div>
+                <div class="place"><%= data.place %></div>
+                <div class="pin"><%= data.pin %></div>
+              </div>
+              <div class="date-time">
+              <div class="date">
+                <p>Datum:</p>
+                <p><%= date %></p> 
+              </div>
+              <div class="date">
+                <p>Time:</p>
+                <p><%= time %></p> 
+              </div>
+              </div>
+           
+            </div>
+            <div class="customer-products">
+              <div class="header">
+                <div class="name">
+                  <p style="text-transform: uppercase;">Produkt</p>
+                  <% data.orderedItems.forEach((item) => { %>
+                    <p><%= item.names.join(" ") %></p>
+                <% }); %>        
+                </div>    
+                <div class="quantity">
+                  <p style="text-transform: uppercase;">Menge</p>
+                  <% data.orderedItems.forEach((item) => { %>
+                    <p><%= item.count %></p>
+                <% }); %> 
+                </div>  
+                <div class="price">
+                  <p style="text-transform: uppercase;">Preis</p>
+                  <% data.orderedItems.forEach((item) => { %>
+                    <p><%= item.price %></p>
+                <% }); %> 
+                </div>
+              <div class="total">
+                <p style="text-transform: uppercase;">Betrag</p>
+                <% data.orderedItems.forEach((item) => { %>
+                  <p><%= item.price %></p>
+              <% }); %> 
+              </div>
+
+              </div>
+              <div class="grand-total">
+                <p>Grand Total</p>
+                <p>1201.00</p>
+              </div>
+            </div>
+            <div class="company-details">
+          </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
