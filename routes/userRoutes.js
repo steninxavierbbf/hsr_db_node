@@ -1,5 +1,5 @@
 import express from 'express';
-import { createANewOrder} from '../controller/userController.js';
+import { cancelOrder, checkCoupons, createACoupon, createANewOrder, trackOrder, updateOrder} from '../controller/userController.js';
 import { getAllUsers } from '../controller/userController.js';
 import { deleteUser } from '../controller/userController.js';
 import { validateToken } from '../validateToken.js';
@@ -9,5 +9,9 @@ route.post("/create-order",createANewOrder);
 route.get("/orders",validateToken, getAllUsers);
 route.delete("/delete-order/:id",deleteUser);
 route.post('/send-email',createPdfAndEmail);
-
+route.put('/update-status',cancelOrder);
+route.post('/order-status',trackOrder);
+route.put('/change-status',updateOrder);
+route.post('/coupon/create',createACoupon);
+route.post('/coupon/validate',checkCoupons);
 export default route;

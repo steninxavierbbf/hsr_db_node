@@ -47,8 +47,20 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     status:{
+        type:Array,
+        required:true
+    },
+    uId:{
         type:String,
         required:true
+    },
+    total:{
+        type:String,
+        required:true
+    },
+    couponUsed:{
+        type:Array,
+        default: []
     }
 });
 

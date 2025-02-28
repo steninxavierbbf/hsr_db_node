@@ -4,14 +4,8 @@ import path from 'path';
 import ejs from 'ejs';
 import { fileURLToPath } from 'url';
 
-const date = new Date().getDate();
-const month = new Date().getMonth()
-const year = new Date().getFullYear();
-const timeHour = new Date().getUTCHours();
-const timeMinute = new Date().getUTCMinutes();
-const timeSec = new Date().getUTCSeconds();
+let date 
 let orderDetails = {}
-let htmlTemplate
   
 let emailConfig = {
     host:'smtp.gmail.com',
@@ -24,36 +18,36 @@ let emailConfig = {
 }
 
 
-let sender = 'stenin.bbf@gmail.com';
+let sender = 'xavier@bbf-bike.de';
 
 class MailController{
    static async htmlToPdfMail(){
     try {
       const filename = fileURLToPath(import.meta.url);
       const dir = path.dirname(filename);
-      ejs.renderFile(path.join(dir,'./mailTemplate.ejs'),{data:orderDetails,date: `${("0" + date).slice(-2)}-${("0" + month).slice(-2)}-${year}`,time:`${("0" + timeHour).slice(-2)}:${("0" + timeMinute).slice(-2)}:${("0" + timeSec).slice(-2)}`},async(err,template)=>{
+      ejs.renderFile(path.join(dir,'./mailTemplate.ejs'),{data:orderDetails,date: date},async(err,template)=>{
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.setContent(template, {waitUntil: 'domcontentloaded'})
+        await page.setContent(template, {waitUntil: 'networkidle0'})
         await page.pdf({
-          path: path.dirname('../temp/Rechnung.pdf') ,
+          path: path.dirname('../temp/Rechnung.pdf'),
           printBackground: true,
           format: 'A4',
         })
-        await browser.close()
+        await browser.close();
         let message = {
           from: sender, 
           to: orderDetails.email,
-          subject: 'Ihre Bestellung wurde erfolgreich platziert',
+          subject: 'Vielen Dank für Ihren Kauf',
           html:template,
           attachments: [
             {
                 path: path.dirname('../temp/Rechnung.pdf'),
-                filename: 'Rechnung.pdf', 
+                filename: 'Bestätigung.pdf', 
                 contentType: 'contentType'
             }],
           envelope: {
-              from: `Valdevz <${sender}>`,
+              from: `Stenin <${sender}>`,
               to: `${orderDetails.email},<${orderDetails.email}>`
           }
         }
@@ -72,11 +66,11 @@ class MailController{
 }
 
 export const createPdfAndEmail = async(req,res)=>{
-  console.log(req.body.email)
+  date = new Date().toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit', weekday:"long", hour: '2-digit', hour12: false, minute:'2-digit', second:'2-digit'});
   orderDetails = req.body; 
     try{
       MailController.htmlToPdfMail().then(()=>{
-       return res.status(200).type('json').send('Email sent successfully');
+       return res.status(200).json('Email sent successfully');
       });
     }
     catch(error){
