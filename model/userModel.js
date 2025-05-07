@@ -58,9 +58,21 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    advancePayment:{
+        type:String,
+        required:true
+    },
+    balaceAmount:{
+        type:String,
+        required:true
+    },
     couponUsed:{
         type:Array,
         default: []
+    },
+    molliePayId:{
+        type:String,
+        required:true
     }
 });
 

@@ -18,41 +18,42 @@ let emailConfig = {
 }
 
 
-let sender = 'xavier@bbf-bike.de';
+let sender = 'Igel@bbf-bike.de';
 
 class MailController{
    static async htmlToPdfMail(){
     try {
       const filename = fileURLToPath(import.meta.url);
       const dir = path.dirname(filename);
-      ejs.renderFile(path.join(dir,'./mailTemplate.ejs'),{data:orderDetails,date: date},async(err,template)=>{
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.setContent(template, {waitUntil: 'networkidle0'})
-        await page.pdf({
-          path: path.dirname('../temp/Rechnung.pdf'),
-          printBackground: true,
-          format: 'A4',
-        })
-        await browser.close();
+      ejs.renderFile(path.join(dir,'./userEmail.ejs'),{data:orderDetails, date: date},async(err,template)=>{
         let message = {
           from: sender, 
-          to: orderDetails.email,
-          subject: 'Vielen Dank für Ihren Kauf',
+          to: `${orderDetails.email}`,
+          subject: `Auftragsrechnung`,
           html:template,
-          attachments: [
-            {
-                path: path.dirname('../temp/Rechnung.pdf'),
-                filename: 'Bestätigung.pdf', 
-                contentType: 'contentType'
-            }],
           envelope: {
-              from: `Stenin <${sender}>`,
-              to: `${orderDetails.email},<${orderDetails.email}>`
+              from: `<${sender}>`,
+              to: `${orderDetails.email}`
           }
         }
         this.mailSender(message);
-        });
+        }
+      );
+      ejs.renderFile(path.join(dir,'./bbfMailTemplate.ejs'),{data:orderDetails, date: date},async(err,template)=>{
+        let message = {
+          from: sender, 
+          to: "xavier@bbf-bike.de ",
+          subject: `AUFTRAG HSR`,
+          html:template,
+          envelope: {
+              from: `<${sender}>`,
+              to: 'xavier@bbf-bike.de'
+          }
+        }
+        this.mailSender(message);
+        }
+      );
+
     } catch (error) {
       throw error;
     }
